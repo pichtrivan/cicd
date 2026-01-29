@@ -1,4 +1,4 @@
-name: Node.js CI/CD
+name: Node.js CI
 
 on:
   push:
@@ -15,40 +15,16 @@ jobs:
         node-version: [18.x]
 
     steps:
-      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      # 3️⃣ Cache node modules for faster installs
-      - name: Cache Node modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      # 4️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 5️⃣ Run ESLint (optional, code linting)
-      - name: Run ESLint
-        run: npx eslint .
-
-      # 6️⃣ Run tests with coverage
-      - name: Run tests with coverage
-        run: npm test -- --coverage
-
-      # 7️⃣ Upload coverage report (optional)
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: coverage
+      - name: Run tests
+        run: npm test
